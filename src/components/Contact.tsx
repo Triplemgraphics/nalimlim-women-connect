@@ -1,7 +1,40 @@
 import { Mail, Phone, MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, { message: "Name is required" }).max(100, { message: "Name must be less than 100 characters" }),
+  email: z.string().trim().email({ message: "Invalid email address" }).max(255, { message: "Email must be less than 255 characters" }),
+  message: z.string().trim().min(1, { message: "Message is required" }).max(1000, { message: "Message must be less than 1000 characters" })
+});
+
+type ContactFormData = z.infer<typeof contactSchema>;
 
 const Contact = () => {
+  const { toast } = useToast();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema)
+  });
+
+  const onSubmit = (data: ContactFormData) => {
+    const subject = encodeURIComponent(`Contact from ${data.name}`);
+    const body = encodeURIComponent(`Name: ${data.name}\nEmail: ${data.email}\n\nMessage:\n${data.message}`);
+    window.location.href = `mailto:info@nalimlimwomen.org?subject=${subject}&body=${body}`;
+    
+    toast({
+      title: "Opening email client",
+      description: "Your message will be sent via your email client.",
+    });
+    reset();
+  };
+
   return (
     <section id="contact" className="py-20 bg-muted/30">
       <div className="container">
@@ -17,6 +50,57 @@ const Contact = () => {
         </div>
 
         <div className="max-w-4xl mx-auto">
+          <Card className="border-none shadow-xl mb-8">
+            <CardContent className="p-8">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name *</Label>
+                  <Input 
+                    id="name" 
+                    {...register("name")}
+                    placeholder="Your full name"
+                    className={errors.name ? "border-destructive" : ""}
+                  />
+                  {errors.name && (
+                    <p className="text-sm text-destructive">{errors.name.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email *</Label>
+                  <Input 
+                    id="email" 
+                    type="email"
+                    {...register("email")}
+                    placeholder="your.email@example.com"
+                    className={errors.email ? "border-destructive" : ""}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-destructive">{errors.email.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="message">Message *</Label>
+                  <Textarea 
+                    id="message" 
+                    {...register("message")}
+                    placeholder="Tell us about your inquiry..."
+                    className={errors.message ? "border-destructive" : ""}
+                    rows={6}
+                  />
+                  {errors.message && (
+                    <p className="text-sm text-destructive">{errors.message.message}</p>
+                  )}
+                </div>
+
+                <Button type="submit" size="lg" className="w-full">
+                  Send Message
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-6 text-center">

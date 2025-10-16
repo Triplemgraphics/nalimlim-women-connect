@@ -33,6 +33,12 @@ const Header = () => {
 
         <nav className="hidden md:flex items-center gap-6">
           <button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
+            Home
+          </button>
+          <button 
             onClick={() => scrollToSection("about")}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
@@ -82,6 +88,12 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden border-t bg-background">
           <nav className="container flex flex-col gap-4 py-4">
+            <button 
+              onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setIsMenuOpen(false); }}
+              className="text-sm font-medium text-left transition-colors hover:text-primary"
+            >
+              Home
+            </button>
             <button 
               onClick={() => scrollToSection("about")}
               className="text-sm font-medium text-left transition-colors hover:text-primary"
