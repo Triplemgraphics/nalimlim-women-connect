@@ -51,6 +51,12 @@ const Header = () => {
             Impact
           </button>
           <button 
+            onClick={() => scrollToSection("blog")}
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
+            Blog
+          </button>
+          <button 
             onClick={() => scrollToSection("contact")}
             className="text-sm font-medium transition-colors hover:text-primary"
           >
@@ -93,6 +99,12 @@ const Header = () => {
               className="text-sm font-medium text-left transition-colors hover:text-primary"
             >
               Impact
+            </button>
+            <button 
+              onClick={() => scrollToSection("blog")}
+              className="text-sm font-medium text-left transition-colors hover:text-primary"
+            >
+              Blog
             </button>
             <button 
               onClick={() => scrollToSection("contact")}
