@@ -1,102 +1,50 @@
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Calendar, User, ArrowLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import educationImg from "@/assets/education-program.jpg";
-import womenEmpowermentImg from "@/assets/women-empowerment.jpg";
-import childProtectionImg from "@/assets/child-protection.jpg";
+import type { Database } from "@/integrations/supabase/types";
+
+type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"];
 
 const BlogPost = () => {
   const { id } = useParams();
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Mock blog posts data (in a real app, this would come from a CMS or database)
-  const posts: Record<string, any> = {
-    "empowering-girls-through-education": {
-      title: "Empowering Girls Through Education: Breaking Barriers in Kapoeta",
-      author: "Lucy Chepar Lokeno",
-      date: "Jan 15, 2025",
-      image: educationImg,
-      category: "Education",
-      content: `
-        <p>In the heart of Eastern Equatoria State, a quiet revolution is taking place. Young girls who were once denied access to education are now walking proudly through school gates, books in hand, dreams in their hearts.</p>
-        
-        <h2>The Challenge</h2>
-        <p>For generations, girls in Greater Kapoeta have faced enormous barriers to education. Early marriage, cultural practices that prioritize dowry over schooling, and limited resources have kept countless bright young minds from reaching their potential.</p>
-        
-        <h2>Our Approach</h2>
-        <p>NAWAI's education program takes a comprehensive, community-centered approach:</p>
-        <ul>
-          <li>Direct support to girls through school supplies and retention programs</li>
-          <li>Community sensitization to change harmful attitudes about girls' education</li>
-          <li>Partnerships with local schools to create safe, inclusive learning environments</li>
-          <li>Life skills training to build confidence and leadership</li>
-        </ul>
-        
-        <h2>Real Impact</h2>
-        <p>The results speak for themselves. School enrollment rates for girls are rising. More importantly, families are beginning to see education as an investment in their daughters' futures, not an obstacle to tradition.</p>
-        
-        <p>But our work is far from over. Every girl who completes her education becomes a beacon of hope for her community, proving that change is possible when we stand together.</p>
-      `,
-    },
-    "women-leading-change": {
-      title: "Women Leading Change: Building Community Resilience",
-      author: "NAWAI Team",
-      date: "Jan 10, 2025",
-      image: womenEmpowermentImg,
-      category: "Empowerment",
-      content: `
-        <p>Leadership knows no gender. In communities across South Sudan, women are stepping forward to guide, inspire, and transform their societies.</p>
-        
-        <h2>Breaking Traditional Barriers</h2>
-        <p>For too long, women's voices have been silenced in decision-making processes. NAWAI's gender equality programs are changing that narrative by:</p>
-        <ul>
-          <li>Providing legal awareness and rights education</li>
-          <li>Creating platforms for women's participation in governance</li>
-          <li>Building networks of women leaders who support each other</li>
-          <li>Addressing gender-based violence through community advocacy</li>
-        </ul>
-        
-        <h2>Success Stories</h2>
-        <p>We've witnessed remarkable transformations. Women who once felt powerless are now mediating conflicts, leading community initiatives, and demanding their rightful place at decision-making tables.</p>
-        
-        <p>These changes don't happen overnight, but each small victory builds momentum for lasting transformation.</p>
-      `,
-    },
-    "protecting-childhood": {
-      title: "Protecting Childhood: Creating Safe Spaces for Every Child",
-      author: "NAWAI Team",
-      date: "Jan 5, 2025",
-      image: childProtectionImg,
-      category: "Child Protection",
-      content: `
-        <p>Every child deserves to grow up in safety, free from abuse, exploitation, and harmful practices. NAWAI's child protection work is creating that reality.</p>
-        
-        <h2>Understanding the Challenge</h2>
-        <p>Children in our communities face multiple threats:</p>
-        <ul>
-          <li>Early and forced marriage</li>
-          <li>Child labor and exploitation</li>
-          <li>Abuse and neglect</li>
-          <li>Lack of access to basic services</li>
-        </ul>
-        
-        <h2>Our Protection Framework</h2>
-        <p>We work on multiple levels to safeguard children:</p>
-        <ul>
-          <li>Establishing safe spaces where children can learn and play</li>
-          <li>Training community protection networks</li>
-          <li>Educating families about children's rights</li>
-          <li>Partnering with traditional leaders to end harmful practices</li>
-        </ul>
-        
-        <h2>The Path Forward</h2>
-        <p>Protecting children requires collective action. When communities understand that children's wellbeing is everyone's responsibility, real change becomes possible.</p>
-      `,
-    },
+  useEffect(() => {
+    if (id) {
+      fetchPost(id);
+    }
+  }, [id]);
+
+  const fetchPost = async (slug: string) => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .eq("slug", slug)
+      .single();
+
+    if (!error && data) {
+      setPost(data);
+    }
+    setLoading(false);
   };
 
-  const post = id ? posts[id] : null;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container py-20 text-center">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!post) {
     return (
@@ -144,24 +92,25 @@ const BlogPost = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                <span>{post.date}</span>
+                <span>{new Date(post.published_at || post.created_at).toLocaleDateString()}</span>
               </div>
             </div>
 
-            {post.image && (
+            {post.image_url && (
               <div className="mb-8 rounded-lg overflow-hidden">
                 <img 
-                  src={post.image} 
+                  src={post.image_url} 
                   alt={post.title}
                   className="w-full h-auto"
                 />
               </div>
             )}
 
-            <div 
-              className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-ul:text-muted-foreground prose-li:text-muted-foreground"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
+            <div className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-ul:text-muted-foreground prose-li:text-muted-foreground">
+              {post.content.split('\n\n').map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </div>
 
             <div className="mt-12 pt-8 border-t">
               <Link to="/blog">

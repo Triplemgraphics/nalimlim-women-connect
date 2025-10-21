@@ -1,41 +1,44 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BlogCard from "./BlogCard";
-import { Link } from "react-router-dom";
-import educationImg from "@/assets/education-program.jpg";
-import womenEmpowermentImg from "@/assets/women-empowerment.jpg";
-import childProtectionImg from "@/assets/child-protection.jpg";
+import type { Database } from "@/integrations/supabase/types";
+
+type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"];
 
 const BlogSection = () => {
-  const recentPosts = [
-    {
-      id: "empowering-girls-through-education",
-      title: "Empowering Girls Through Education: Breaking Barriers in Kapoeta",
-      excerpt: "Discover how NAWAI is transforming lives by ensuring girls in Eastern Equatoria State have access to quality education and opportunities to thrive.",
-      author: "Lucy Chepar Lokeno",
-      date: "Jan 15, 2025",
-      image: educationImg,
-      category: "Education",
-    },
-    {
-      id: "women-leading-change",
-      title: "Women Leading Change: Building Community Resilience",
-      excerpt: "Meet the inspiring women leaders who are driving transformation in their communities through advocacy, empowerment, and collective action.",
-      author: "NAWAI Team",
-      date: "Jan 10, 2025",
-      image: womenEmpowermentImg,
-      category: "Empowerment",
-    },
-    {
-      id: "protecting-childhood",
-      title: "Protecting Childhood: Creating Safe Spaces for Every Child",
-      excerpt: "Learn about our child protection initiatives and how we're working with communities to end harmful practices and ensure children's rights.",
-      author: "NAWAI Team",
-      date: "Jan 5, 2025",
-      image: childProtectionImg,
-      category: "Child Protection",
-    },
-  ];
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .order("published_at", { ascending: false })
+      .limit(3);
+
+    if (!error && data) {
+      setPosts(data);
+    }
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <section id="blog" className="py-20 bg-muted/30">
+        <div className="container text-center">
+          <p className="text-muted-foreground">Loading posts...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="blog" className="py-20 bg-muted/30">
@@ -59,8 +62,17 @@ const BlogSection = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {recentPosts.map((post) => (
-            <BlogCard key={post.id} {...post} />
+          {posts.map((post) => (
+            <BlogCard
+              key={post.id}
+              id={post.slug}
+              title={post.title}
+              excerpt={post.excerpt}
+              category={post.category}
+              date={new Date(post.published_at || post.created_at).toLocaleDateString()}
+              image={post.image_url || undefined}
+              author={post.author}
+            />
           ))}
         </div>
 
