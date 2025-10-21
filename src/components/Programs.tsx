@@ -25,6 +25,12 @@ const Programs = () => {
       image: childProtectionImg,
     },
     {
+      icon: Users,
+      title: "Reintegration of Returnees",
+      description: "NAWAI addresses the needs of people returning to their communities after displacement, migration or rehabilitation. It focuses on promoting social inclusion, economic empowerment and psychosocial support to enable successful reintegration and active participation in community.",
+      image: null,
+    },
+    {
       icon: Heart,
       title: "Community Health and Psychosocial Support",
       description: "Addressing women's and girls' health and wellbeing through reproductive health education, mental health care, and trauma-informed support.",
