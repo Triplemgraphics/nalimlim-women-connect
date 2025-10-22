@@ -16,6 +16,8 @@ const AdminBlog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -30,13 +32,40 @@ const AdminBlog = () => {
 
   useEffect(() => {
     checkAuth();
-    fetchPosts();
   }, []);
 
   const checkAuth = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+
+      // Check if user has admin role
+      const { data: roles, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "admin")
+        .single();
+
+      if (error || !roles) {
+        toast({
+          variant: "destructive",
+          title: "Access Denied",
+          description: "You don't have permission to access this page.",
+        });
+        navigate("/");
+        return;
+      }
+
+      setIsAdmin(true);
+      fetchPosts();
+    } catch (error) {
       navigate("/auth");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -143,6 +172,18 @@ const AdminBlog = () => {
     await supabase.auth.signOut();
     navigate("/auth");
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background p-8">
