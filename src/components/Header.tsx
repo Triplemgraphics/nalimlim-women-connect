@@ -37,9 +37,15 @@ const Header = () => {
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
-          <Link to="/" className="text-sm font-medium transition-colors hover:text-primary">
+          <button 
+            onClick={() => {
+              navigate("/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
             Home
-          </Link>
+          </button>
           <button 
             onClick={() => scrollToSection("about")}
             className="text-sm font-medium transition-colors hover:text-primary"
@@ -67,9 +73,6 @@ const Header = () => {
           >
             Contact
           </button>
-          <Link to="/admin/blog" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-            Admin
-          </Link>
           <Button 
             onClick={() => scrollToSection("support")}
             className="bg-primary hover:bg-primary/90"
@@ -90,13 +93,16 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden border-t bg-background">
           <nav className="container flex flex-col gap-4 py-4">
-            <Link 
-              to="/"
-              onClick={() => setIsMenuOpen(false)}
+            <button 
+              onClick={() => {
+                navigate("/");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setIsMenuOpen(false);
+              }}
               className="text-sm font-medium text-left transition-colors hover:text-primary"
             >
               Home
-            </Link>
+            </button>
             <button 
               onClick={() => scrollToSection("about")}
               className="text-sm font-medium text-left transition-colors hover:text-primary"
@@ -128,13 +134,6 @@ const Header = () => {
             >
               Contact
             </button>
-            <Link 
-              to="/admin/blog"
-              onClick={() => setIsMenuOpen(false)}
-              className="text-xs text-muted-foreground text-left hover:text-primary transition-colors"
-            >
-              Admin
-            </Link>
             <Button 
               onClick={() => scrollToSection("support")}
               className="bg-primary hover:bg-primary/90 w-full"
