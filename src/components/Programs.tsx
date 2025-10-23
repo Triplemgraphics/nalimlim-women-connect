@@ -1,4 +1,4 @@
-import { BookOpen, Users, Shield, Heart, Sprout, Droplet, HandHeart, Leaf, Accessibility } from "lucide-react";
+import { BookOpen, Users, Shield, Heart, Sprout, Droplet, HandHeart, Leaf, Accessibility, CloudRain, Route } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import educationImg from "@/assets/education-program.jpg";
 import womenEmpowermentImg from "@/assets/women-empowerment.jpg";
@@ -64,6 +64,18 @@ const Programs = () => {
       icon: Accessibility,
       title: "Inclusion of Persons With Special Needs",
       description: "Ensuring equitable access, participation and empowerment of individuals with disabilities in all community development initiatives.",
+      image: null,
+    },
+    {
+      icon: CloudRain,
+      title: "Climate Change and Adaptation",
+      description: "Supporting pastoralist communities across the border to adapt to climate variability through resilient livelihood strategies, sustainable rangeland management, and climate-smart livestock practices that enhance food security and environmental sustainability.",
+      image: null,
+    },
+    {
+      icon: Route,
+      title: "Opening of Feeder Roads for Connection",
+      description: "Improving rural accessibility and economic integration by facilitating the construction and rehabilitation of feeder roads that connect remote communities to markets, essential services, and opportunities for trade and development.",
       image: null,
     },
   ];
