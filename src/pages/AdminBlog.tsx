@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { Pencil, Trash2, Plus, LogIn } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
 type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"];
@@ -18,6 +18,9 @@ const AdminBlog = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -38,9 +41,11 @@ const AdminBlog = () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        navigate("/auth");
+        setLoading(false);
         return;
       }
+
+      setIsAuthenticated(true);
 
       // Check if user has admin role
       const { data: roles, error } = await supabase
@@ -48,7 +53,7 @@ const AdminBlog = () => {
         .select("role")
         .eq("user_id", session.user.id)
         .eq("role", "admin")
-        .single();
+        .maybeSingle();
 
       if (error || !roles) {
         toast({
@@ -56,17 +61,43 @@ const AdminBlog = () => {
           title: "Access Denied",
           description: "You don't have permission to access this page.",
         });
-        navigate("/");
+        setLoading(false);
         return;
       }
 
       setIsAdmin(true);
       fetchPosts();
     } catch (error) {
-      navigate("/auth");
+      console.error("Auth error:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthLoading(true);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: loginForm.email,
+      password: loginForm.password,
+    });
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Login Failed",
+        description: error.message,
+      });
+      setAuthLoading(false);
+      return;
+    }
+
+    if (data.session) {
+      setIsAuthenticated(true);
+      checkAuth();
+    }
+    setAuthLoading(false);
   };
 
   const fetchPosts = async () => {
@@ -170,7 +201,9 @@ const AdminBlog = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/auth");
+    setIsAuthenticated(false);
+    setIsAdmin(false);
+    setLoginForm({ email: "", password: "" });
   };
 
   if (loading) {
@@ -181,8 +214,91 @@ const AdminBlog = () => {
     );
   }
 
-  if (!isAdmin) {
-    return null;
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center">Admin Login</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={loginForm.email}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, email: e.target.value })
+                  }
+                  required
+                  placeholder="admin@example.com"
+                />
+              </div>
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={loginForm.password}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, password: e.target.value })
+                  }
+                  required
+                  placeholder="Enter your password"
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={authLoading}>
+                <LogIn className="mr-2 h-4 w-4" />
+                {authLoading ? "Logging in..." : "Login"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate("/")}
+              >
+                Back to Site
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show access denied if authenticated but not admin
+  if (isAuthenticated && !isAdmin) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center text-destructive">
+              Access Denied
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-center text-muted-foreground">
+              You don't have permission to access the admin panel.
+            </p>
+            <div className="space-y-2">
+              <Button onClick={handleLogout} className="w-full">
+                Logout
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/")}
+                className="w-full"
+              >
+                Back to Site
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
