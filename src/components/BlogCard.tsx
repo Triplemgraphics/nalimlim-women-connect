@@ -1,4 +1,4 @@
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { Calendar, User, ArrowRight, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -49,12 +49,20 @@ const BlogCard = ({ id, title, excerpt, author, date, image, category }: BlogCar
             </div>
           </div>
         </div>
-        <Link to={`/blog/${id}`}>
-          <Button variant="ghost" className="group/btn p-0 h-auto text-primary hover:bg-transparent">
-            Read More
-            <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-          </Button>
-        </Link>
+        <div className="flex items-center justify-between gap-4">
+          <Link to={`/blog/${id}`}>
+            <Button variant="ghost" className="group/btn p-0 h-auto text-primary hover:bg-transparent">
+              Read More
+              <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+          <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
+            <Button size="sm" className="bg-secondary hover:bg-secondary/90">
+              <Heart className="mr-1 h-4 w-4" />
+              Donate
+            </Button>
+          </a>
+        </div>
       </CardContent>
     </Card>
   );
