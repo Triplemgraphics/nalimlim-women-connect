@@ -26,6 +26,13 @@ const Donate = () => {
     },
   ];
 
+  const scrollToSupport = () => {
+    const el = document.getElementById('support');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="donate" className="py-20 bg-gradient-to-b from-background to-muted/30">
       <div className="container">
@@ -43,12 +50,10 @@ const Donate = () => {
           <Button 
             size="lg"
             className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
-            asChild
+            onClick={scrollToSupport}
           >
-            <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
-              <Heart className="mr-2 h-5 w-5" />
-              Donate Now
-            </a>
+            <Heart className="mr-2 h-5 w-5" />
+            Donate Now
           </Button>
         </div>
 
@@ -93,11 +98,9 @@ const Donate = () => {
             size="lg"
             variant="outline"
             className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-            asChild
+            onClick={scrollToSupport}
           >
-            <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
-              Make a Difference Today
-            </a>
+            Make a Difference Today
           </Button>
         </div>
       </div>

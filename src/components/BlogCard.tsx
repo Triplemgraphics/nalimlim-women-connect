@@ -1,7 +1,7 @@
 import { Calendar, User, ArrowRight, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 interface BlogCardProps {
   id: string;
@@ -14,6 +14,19 @@ interface BlogCardProps {
 }
 
 const BlogCard = ({ id, title, excerpt, author, date, image, category }: BlogCardProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const goToSupport = () => {
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById("support")?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    } else {
+      document.getElementById("support")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <Card className="border-none shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
       {image && (
@@ -56,11 +69,9 @@ const BlogCard = ({ id, title, excerpt, author, date, image, category }: BlogCar
               <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <Button size="sm" className="bg-secondary hover:bg-secondary/90" asChild>
-            <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
-              <Heart className="mr-1 h-4 w-4" />
-              Donate
-            </a>
+          <Button size="sm" className="bg-secondary hover:bg-secondary/90" onClick={goToSupport}>
+            <Heart className="mr-1 h-4 w-4" />
+            Donate
           </Button>
         </div>
       </CardContent>
