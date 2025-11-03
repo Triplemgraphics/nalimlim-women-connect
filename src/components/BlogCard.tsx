@@ -56,12 +56,12 @@ const BlogCard = ({ id, title, excerpt, author, date, image, category }: BlogCar
               <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
             </Button>
           </Link>
-          <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
-            <Button size="sm" className="bg-secondary hover:bg-secondary/90">
+          <Button size="sm" className="bg-secondary hover:bg-secondary/90" asChild>
+            <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
               <Heart className="mr-1 h-4 w-4" />
               Donate
-            </Button>
-          </a>
+            </a>
+          </Button>
         </div>
       </CardContent>
     </Card>

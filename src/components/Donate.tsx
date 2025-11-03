@@ -40,15 +40,16 @@ const Donate = () => {
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
             Your donation helps girls stay in school, empowers survivors of violence, and supports women to lead and thrive.
           </p>
-          <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
-            <Button 
-              size="lg"
-              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
-            >
+          <Button 
+            size="lg"
+            className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
+            asChild
+          >
+            <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
               <Heart className="mr-2 h-5 w-5" />
               Donate Now
-            </Button>
-          </a>
+            </a>
+          </Button>
         </div>
 
         {/* Why Your Support Matters */}
@@ -88,15 +89,16 @@ const Donate = () => {
 
         {/* Bottom CTA */}
         <div className="text-center">
-          <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
-            <Button 
-              size="lg"
-              variant="outline"
-              className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-            >
+          <Button 
+            size="lg"
+            variant="outline"
+            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+            asChild
+          >
+            <a href="https://nalimlimwomen.org" target="_blank" rel="noopener noreferrer">
               Make a Difference Today
-            </Button>
-          </a>
+            </a>
+          </Button>
         </div>
       </div>
     </section>
