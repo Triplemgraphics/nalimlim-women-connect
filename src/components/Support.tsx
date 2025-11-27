@@ -111,8 +111,11 @@ const Support = () => {
                 Bank Transfer Details
               </h3>
             </div>
-            <p className="text-muted-foreground mb-8 text-lg">
+            <p className="text-muted-foreground mb-2 text-lg">
               You can support NAWAI directly through bank transfer to either of our accounts:
+            </p>
+            <p className="text-muted-foreground mb-8 text-lg font-semibold">
+              Bank Name: <span className="text-foreground">Ecobank</span>
             </p>
             
             <div className="grid md:grid-cols-2 gap-6">
