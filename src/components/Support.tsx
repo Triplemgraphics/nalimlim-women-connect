@@ -101,7 +101,7 @@ const Support = () => {
           })}
         </div>
 
-        <Card className="border-none shadow-xl bg-card mb-12">
+        <Card id="bank-details" className="border-none shadow-xl bg-card mb-12">
           <CardContent className="p-8 md:p-12">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">

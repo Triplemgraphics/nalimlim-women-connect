@@ -74,7 +74,7 @@ const Header = () => {
             Contact
           </button>
           <Button 
-            onClick={() => scrollToSection("support")}
+            onClick={() => scrollToSection("bank-details")}
             className="bg-primary hover:bg-primary/90"
           >
             Support Us
@@ -135,7 +135,7 @@ const Header = () => {
               Contact
             </button>
             <Button 
-              onClick={() => scrollToSection("support")}
+              onClick={() => scrollToSection("bank-details")}
               className="bg-primary hover:bg-primary/90 w-full"
             >
               Support Us

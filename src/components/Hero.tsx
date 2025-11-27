@@ -32,7 +32,7 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <Button 
               size="lg"
-              onClick={() => scrollToSection("support")}
+              onClick={() => scrollToSection("bank-details")}
               className="bg-secondary hover:bg-secondary/90 text-secondary-foreground"
             >
               Partner With Us

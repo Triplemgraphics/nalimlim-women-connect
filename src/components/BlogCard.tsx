@@ -20,10 +20,10 @@ const BlogCard = ({ id, title, excerpt, author, date, image, category }: BlogCar
     if (location.pathname !== "/") {
       navigate("/");
       setTimeout(() => {
-        document.getElementById("support")?.scrollIntoView({ behavior: "smooth" });
+        document.getElementById("bank-details")?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     } else {
-      document.getElementById("support")?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById("bank-details")?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
