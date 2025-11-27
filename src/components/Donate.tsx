@@ -27,7 +27,7 @@ const Donate = () => {
   ];
 
   const scrollToSupport = () => {
-    const el = document.getElementById('support');
+    const el = document.getElementById('bank-details');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
