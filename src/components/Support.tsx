@@ -1,13 +1,24 @@
-import { Handshake, Users, DollarSign, GraduationCap } from "lucide-react";
+import { Handshake, Users, DollarSign, GraduationCap, Building2, Copy } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const Support = () => {
+  const { toast } = useToast();
+  
   const scrollToContact = () => {
     const element = document.getElementById("contact");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const copyToClipboard = (text: string, currency: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied!",
+      description: `${currency} account number copied to clipboard`,
+    });
   };
 
   const supportWays = [
@@ -89,6 +100,62 @@ const Support = () => {
             );
           })}
         </div>
+
+        <Card className="border-none shadow-xl bg-card mb-12">
+          <CardContent className="p-8 md:p-12">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold text-foreground">
+                Bank Transfer Details
+              </h3>
+            </div>
+            <p className="text-muted-foreground mb-8 text-lg">
+              You can support NAWAI directly through bank transfer to either of our accounts:
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-gradient-to-br from-primary/5 to-secondary/5 p-6 rounded-lg border border-border">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-xl font-semibold text-foreground">USD Account</h4>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard("6940062883", "USD")}
+                    className="hover:bg-primary/10"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Account Number</p>
+                  <p className="text-2xl font-bold text-foreground font-mono">6940062883</p>
+                  <p className="text-sm text-muted-foreground mt-4">Currency: United States Dollar (USD)</p>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-secondary/5 to-primary/5 p-6 rounded-lg border border-border">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-xl font-semibold text-foreground">SSP Account</h4>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard("6940062884", "SSP")}
+                    className="hover:bg-primary/10"
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Account Number</p>
+                  <p className="text-2xl font-bold text-foreground font-mono">6940062884</p>
+                  <p className="text-sm text-muted-foreground mt-4">Currency: South Sudanese Pound (SSP)</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="text-center">
           <Button 
